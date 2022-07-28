@@ -1,15 +1,14 @@
 package base.project.restapi.service;
 
+import base.project.restapi.model.UserModel;
+import base.project.restapi.repository.UserRepository;
+import base.project.restapi.service.model.IUserService;
+import base.project.restapi.transformers.UserTransformer;
+import base.project.restapi.transformers.model.UserPrincipalTransformModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import thesoftwarepractice.learn.model.UserModel;
-import thesoftwarepractice.learn.producer.UserProducer;
-import thesoftwarepractice.learn.repository.UserRepository;
-import thesoftwarepractice.learn.service.model.IUserService;
-import thesoftwarepractice.learn.transformers.UserTransformer;
-import thesoftwarepractice.learn.transformers.model.UserPrincipalTransformModel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,8 +24,6 @@ import java.util.Optional;
 public class UserService implements IUserService {
     UserRepository userRepository;
 
-    UserProducer userProducer;
-
     CriteriaBuilder criteriaBuilder;
 
     @PersistenceContext
@@ -34,11 +31,9 @@ public class UserService implements IUserService {
 
     @Autowired
     public UserService(
-        UserRepository userRepository,
-        UserProducer userProducer
+        UserRepository userRepository
     ) {
         this.userRepository = userRepository;
-        this.userProducer = userProducer;
     }
 
     @Override
@@ -48,11 +43,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserModel save(UserModel payload) {
-        UserModel user = userRepository.save(payload);
-
-        userProducer.publishEventCreate(user);
-
-        return user;
+        return userRepository.save(payload);
     }
 
     @Override
@@ -62,8 +53,6 @@ public class UserService implements IUserService {
         UserModel userModel = new UserModel();
 
         userModel.setId(id);
-
-        userProducer.publishEventDelete(userModel);
     }
 
     public List<UserModel> paginate(Pageable pageable) {

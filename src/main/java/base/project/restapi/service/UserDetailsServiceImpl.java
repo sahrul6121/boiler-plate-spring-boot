@@ -1,13 +1,13 @@
 package base.project.restapi.service;
 
+import base.project.restapi.model.UserModel;
+import base.project.restapi.repository.UserRepository;
+import base.project.restapi.transformers.UserTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import thesoftwarepractice.learn.model.UserModel;
-import thesoftwarepractice.learn.repository.UserRepository;
-import thesoftwarepractice.learn.transformers.UserTransformer;
 
 import javax.transaction.Transactional;
 
