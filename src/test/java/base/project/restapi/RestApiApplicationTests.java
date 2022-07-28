@@ -12,17 +12,6 @@ import java.util.Properties;
 @SpringBootTest
 @ActiveProfiles("test")
 class RestApiApplicationTests {
-	@Before
-	public void setUp() {
-		Properties properties = new Properties();
-
-		properties.setProperty("port", "6379");
-
-		RedisServer redisServer = RedisServer.newServerFrom(properties);
-
-		
-	}
-
 	@Test
 	void exampleTest() {
 		Assertions.assertSame("TEST", "TEST");
