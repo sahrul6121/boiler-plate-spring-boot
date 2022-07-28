@@ -16,6 +16,8 @@ public interface IUserService extends IBaseService<UserModel> {
 
     void deleteById(int id);
 
+    UserModel findOneByUsername(String username, int id);
+
     UserPrincipalTransformModel loadUserByUsername(String username);
 
     UserModel findOneByUsername(String value);

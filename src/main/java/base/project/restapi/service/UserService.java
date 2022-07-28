@@ -107,6 +107,28 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserModel findOneByUsername(String username, int id) {
+        try {
+            criteriaBuilder = entityManager.getCriteriaBuilder();
+
+            CriteriaQuery<UserModel> query = criteriaBuilder
+                    .createQuery(UserModel.class);
+
+            Root<UserModel> rootQuery = query.from(UserModel.class);
+
+            query.where(criteriaBuilder.equal(rootQuery.get("username"), username));
+
+            query.where(criteriaBuilder.notEqual(rootQuery.get("id"), id));
+
+            query.select(rootQuery);
+
+            return entityManager.createQuery(query).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
     public UserPrincipalTransformModel loadUserByUsername(String username) {
         UserModel user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User NOT Found"));
