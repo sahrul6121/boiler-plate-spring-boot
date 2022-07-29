@@ -39,49 +39,27 @@ public class GlobalException extends ResponseEntityExceptionHandler {
 
         errors.addAll(fieldErrors);
 
-        ErrorResponse err = new ErrorResponse(
-            HttpStatus.BAD_REQUEST,
-    "Validation Errors",
-            "",
-            errors
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+        return new ErrorResponse("Validation Errors", errors).response(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(
             Exception ex,
             WebRequest request) {
-        ErrorResponse err = new ErrorResponse(
-            HttpStatus.BAD_REQUEST,
-            ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+        return new ErrorResponse(ex.getMessage()).responseError(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
         UserNotFoundException ex
     ) {
-        ErrorResponse err = new ErrorResponse(
-            HttpStatus.NOT_FOUND,
-            ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+        return new ErrorResponse(ex.getMessage()).responseError(HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CustomErrorException.class)
-    public ResponseEntity<Object> handleCustomException(
+    public ResponseEntity<ErrorResponse> handleCustomException(
         CustomErrorException ex
     ) {
-        ErrorResponse err = new ErrorResponse(
-            ex.getStatus(),
-            ex.getMessage()
-        );
-
-        return ResponseEntity.status(ex.getStatus()).body(err);
+        return new ErrorResponse(ex.getMessage()).responseError(ex.getStatus());
     }
 }
