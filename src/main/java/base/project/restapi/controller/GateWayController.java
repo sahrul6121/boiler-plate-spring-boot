@@ -59,9 +59,8 @@ public class GateWayController extends BaseController {
                     .status(status)
                     .body(
                         new ErrorResponse(
-                            status,
                             this.messageHelper.responseMessage(ResponseMessage.AUTH_ERROR_UNAUTHORIZED)
-                        )
+                        ).responseError(HttpStatus.UNAUTHORIZED)
                     );
             }
 
