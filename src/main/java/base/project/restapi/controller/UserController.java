@@ -1,6 +1,9 @@
 package base.project.restapi.controller;
 
 import base.project.restapi.base.controller.BaseController;
+import base.project.restapi.classes.PaginationResult;
+import base.project.restapi.classes.SuccessPaginateResponse;
+import base.project.restapi.classes.SuccessSingleResponse;
 import base.project.restapi.dto.UserDTO;
 import base.project.restapi.dto.UserUpdateDTO;
 import base.project.restapi.exception.UserNotFoundException;
@@ -15,10 +18,9 @@ import base.project.restapi.util.ApiUrl;
 import base.project.restapi.util.ResponseMessage;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,23 +47,24 @@ public class UserController extends BaseController {
 
     @GetMapping()
     @ResponseBody
-    public Page<UserTransformerModel> index(
+    public ResponseEntity<SuccessPaginateResponse> index(
         Pageable pageable
     ) {
-        return new PageImpl<>(
-            this.userService.paginate(pageable)
-                .stream()
-                .map(UserTransformer::transformerModel)
-                .toList(),
-            pageable,
-            0
-        );
+        PaginationResult<UserModel> paginationResult = this.userService.paginate(pageable);
+
+        return new SuccessPaginateResponse(
+            this.messageHelper.responseMessage(ResponseMessage.USER_PAGINATE),
+            paginationResult.getTotal(),
+            pageable.getPageSize(),
+            pageable.getPageNumber(),
+            paginationResult.getData()
+        ).response(HttpStatus.OK);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserTransformerModel store(
+    public ResponseEntity<SuccessSingleResponse> store(
         @RequestBody UserDTO userDTO
     ) {
         UserModel userModel = modelMapper.map(userDTO, UserModel.class);
@@ -74,13 +77,16 @@ public class UserController extends BaseController {
             this.messageHelper
         ).apply();
 
-        return UserTransformer.transformerModel(savedUser);
+        return new SuccessSingleResponse(
+            this.messageHelper.responseMessage(ResponseMessage.USER_SAVE),
+            UserTransformer.transformerModel(savedUser)
+        ).response(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserTransformerModel update(
+    public ResponseEntity<SuccessSingleResponse> update(
         @PathVariable("id") int id,
         @RequestBody UserUpdateDTO userUpdateDTO
     ) {
@@ -97,13 +103,16 @@ public class UserController extends BaseController {
             this.messageHelper
         ).apply();
 
-        return UserTransformer.transformerModel(updateResult);
+        return new SuccessSingleResponse(
+            this.messageHelper.responseMessage(ResponseMessage.USER_SAVE),
+            UserTransformer.transformerModel(updateResult)
+        ).response(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String delete(
+    public ResponseEntity<SuccessSingleResponse> delete(
         @PathVariable("id") int id
     ) {
         userService.findById(id).orElseThrow(
@@ -114,13 +123,16 @@ public class UserController extends BaseController {
 
         userService.deleteById(id);
 
-        return this.messageHelper.responseMessage(ResponseMessage.USER_DELETE);
+        return new SuccessSingleResponse(
+            this.messageHelper.responseMessage(ResponseMessage.USER_DELETE),
+            null
+        ).response(HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserTransformerModel show(
+    public ResponseEntity<SuccessSingleResponse> show(
         @PathVariable("id") int id
     ) {
         UserModel userModel = userService.findById(id).orElseThrow(
@@ -129,6 +141,9 @@ public class UserController extends BaseController {
             )
         );
 
-        return UserTransformer.transformerModel(userModel);
+        return new SuccessSingleResponse(
+            this.messageHelper.responseMessage(ResponseMessage.USER_SAVE),
+            UserTransformer.transformerModel(userModel)
+        ).response(HttpStatus.OK);
     }
 }

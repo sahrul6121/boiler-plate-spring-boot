@@ -1,5 +1,7 @@
 package base.project.restapi.service;
 
+import base.project.restapi.classes.PaginationResult;
+import base.project.restapi.helper.PaginationHelper;
 import base.project.restapi.model.UserModel;
 import base.project.restapi.repository.UserRepository;
 import base.project.restapi.service.model.IUserService;
@@ -55,7 +57,7 @@ public class UserService implements IUserService {
         userModel.setId(id);
     }
 
-    public List<UserModel> paginate(Pageable pageable) {
+    public PaginationResult<UserModel> paginate(Pageable pageable) {
         criteriaBuilder = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<UserModel> query = criteriaBuilder
@@ -65,11 +67,7 @@ public class UserService implements IUserService {
 
         query.select(rootQuery);
 
-        return entityManager
-                .createQuery(query)
-                .setFirstResult(pageable.getPageNumber() > 1 ? pageable.getPageNumber() * pageable.getPageSize() : 0)
-                .setMaxResults(pageable.getPageSize())
-                .getResultList();
+        return new PaginationHelper<UserModel>(entityManager, pageable).apply(query, rootQuery);
     }
 
     @Override

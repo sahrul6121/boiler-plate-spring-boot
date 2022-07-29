@@ -57,4 +57,8 @@ public class UserTransformer {
 
         return userTransformerModel;
     }
+
+    public static List<UserTransformerModel> transformerModels(List<UserModel> userModels) {
+        return userModels.stream().map(UserTransformer::transformerModel).toList();
+    }
 }
