@@ -7,12 +7,20 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @AllArgsConstructor
-public class SuccessListResponse {
+public class SuccessPaginateResponse {
     private String message;
+
+    private Long total;
+
+    private Integer per_page;
+
+    private Integer total_page;
+
+    private Integer current_page;
 
     private List<?> data;
 
-    public ResponseEntity<SuccessListResponse> response(HttpStatus status) {
+    public ResponseEntity<SuccessPaginateResponse> response(HttpStatus status) {
         return ResponseEntity.status(status).body(this);
     }
 }
