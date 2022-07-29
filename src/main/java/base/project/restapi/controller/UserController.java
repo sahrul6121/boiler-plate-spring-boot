@@ -104,7 +104,7 @@ public class UserController extends BaseController {
         ).apply();
 
         return new SuccessSingleResponse(
-            this.messageHelper.responseMessage(ResponseMessage.USER_SAVE),
+            this.messageHelper.responseMessage(ResponseMessage.USER_UPDATE),
             UserTransformer.transformerModel(updateResult)
         ).response(HttpStatus.OK);
     }
@@ -142,7 +142,7 @@ public class UserController extends BaseController {
         );
 
         return new SuccessSingleResponse(
-            this.messageHelper.responseMessage(ResponseMessage.USER_SAVE),
+            this.messageHelper.responseMessage(ResponseMessage.USER_DETAIL),
             UserTransformer.transformerModel(userModel)
         ).response(HttpStatus.OK);
     }

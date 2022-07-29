@@ -12,6 +12,7 @@ public abstract class ResponseMessage {
     public static final String USER_SAVE = USER_SUCCESS + "save";
     public static final String USER_UPDATE = USER_SUCCESS + "update";
     public static final String USER_DELETE = USER_SUCCESS + "delete";
+    public static final String USER_DETAIL = USER_SUCCESS + "detail";
     public static final String USER_PAGINATE = USER_SUCCESS + "paginate";
 
     public static final String AUTH_ERROR = "auth.error.";
