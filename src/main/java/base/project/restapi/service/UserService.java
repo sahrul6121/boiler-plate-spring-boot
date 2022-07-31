@@ -67,7 +67,7 @@ public class UserService implements IUserService {
 
         query.select(rootQuery);
 
-        return new PaginationHelper<UserModel>(entityManager, pageable).apply(query, rootQuery);
+        return new PaginationHelper<UserModel>(entityManager, pageable).apply(query, UserModel.class);
     }
 
     @Override
