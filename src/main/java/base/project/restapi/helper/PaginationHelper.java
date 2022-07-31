@@ -32,7 +32,7 @@ public class PaginationHelper<BaseModel> {
             .createQuery(criteriaQuery)
             .setFirstResult(
                 this.pageable.getPageNumber() > 1
-                    ? this.pageable.getPageNumber() * this.pageable.getPageSize()
+                    ? (this.pageable.getPageNumber() - 1) * this.pageable.getPageSize()
                     : 0
             )
             .setMaxResults(this.pageable.getPageSize())
