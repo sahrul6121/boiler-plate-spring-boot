@@ -18,13 +18,13 @@ public class PaginationHelper<BaseModel> {
 
     public PaginationResult<BaseModel> apply(
         CriteriaQuery<BaseModel> criteriaQuery,
-        Root<BaseModel> root
+        Class<BaseModel> baseModelClass
     ) {
         CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
 
         CriteriaQuery<Long> criteriaTotal = criteriaBuilder.createQuery(Long.class);
 
-        criteriaTotal.select(criteriaBuilder.count(root));
+        criteriaTotal.select(criteriaBuilder.count(criteriaTotal.from(baseModelClass)));
 
         Long total = entityManager.createQuery(criteriaTotal).getSingleResult();
 
