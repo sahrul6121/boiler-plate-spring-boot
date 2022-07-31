@@ -1,6 +1,5 @@
 package base.project.restapi.classes;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -10,19 +9,37 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class SuccessPaginateResponse {
-    private String message;
+    String message;
 
-    private Long total;
+    Long total;
 
-    private Integer per_page;
+    Integer pageSize;
 
-    private Integer total_page;
+    Integer totalPage;
 
-    private Integer current_page;
+    Integer pageNumber;
 
-    private List<?> data;
+    List<?> data;
+
+    public SuccessPaginateResponse(
+        String message,
+        Long total,
+        Integer pageSize,
+        Integer pageNumber,
+        List<?> data
+    ) {
+        this.message = message;
+        this.total = total;
+        this.pageSize = pageSize;
+        this.pageNumber = pageNumber;
+        this.data = data;
+        this.totalPage = 1;
+
+        if (total > 0 && total > pageSize) {
+            this.totalPage = Math.toIntExact(total / pageSize);
+        }
+    }
 
     public ResponseEntity<SuccessPaginateResponse> response(HttpStatus status) {
         return ResponseEntity.status(status).body(this);
