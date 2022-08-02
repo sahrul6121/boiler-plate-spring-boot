@@ -1,4 +1,4 @@
-package base.project.restapi.example;
+package base.project.restapi.manager.example;
 
 import base.project.restapi.helper.MessageHelper;
 import base.project.restapi.model.ExampleModel;
